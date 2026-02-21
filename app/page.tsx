@@ -33,6 +33,15 @@ import { BankBalanceScreen } from "@/components/gpay/bank-balance-screen"
 import { BottomNav } from "@/components/gpay/bottom-nav"
 import { DesktopSidebar } from "@/components/gpay/desktop-sidebar"
 import { MobileHeader } from "@/components/gpay/mobile-header"
+import { CryptoWalletScreen } from "@/components/gpay/crypto-wallet-screen"
+import { CryptoTransactionScreen } from "@/components/gpay/crypto-transaction-screen"
+import { SavingsScreen } from "@/components/gpay/savings-screen"
+import { SubscriptionsScreen } from "@/components/gpay/subscriptions-screen"
+import { LoanCalculatorScreen } from "@/components/gpay/loan-calculator-screen"
+import { LoanApplicationScreen } from "@/components/gpay/loan-application-screen"
+import { BudgetScreen } from "@/components/gpay/budget-screen"
+import { ReferralScreen } from "@/components/gpay/referral-screen"
+import { LoyaltyDashboardScreen } from "@/components/gpay/loyalty-dashboard-screen"
 
 export type Screen =
   | "home"
@@ -65,6 +74,15 @@ export type Screen =
   | "security"
   | "investment-details"
   | "insurance-details"
+  | "crypto-wallet"
+  | "crypto-transaction"
+  | "savings"
+  | "subscriptions"
+  | "loan-calculator"
+  | "loan-application"
+  | "budget"
+  | "referral"
+  | "loyalty-dashboard"
 
 export interface Contact {
   id: string
@@ -106,6 +124,116 @@ export interface Notification {
 export interface User {
   name: string
   email: string
+}
+
+// Crypto Wallet Models
+export interface CryptoWallet {
+  id: string
+  symbol: string
+  name: string
+  quantity: number
+  currentPrice: number
+  balance: number
+  change24h: number
+  icon: string
+}
+
+export interface CryptoTransaction {
+  id: string
+  walletId: string
+  type: "buy" | "sell"
+  quantity: number
+  pricePerUnit: number
+  totalAmount: number
+  date: Date
+  status: "completed" | "pending"
+}
+
+// Fixed Deposit Model
+export interface FixedDeposit {
+  id: string
+  amount: number
+  depositDate: Date
+  maturityDate: Date
+  interestRate: number
+  tenure: number
+  status: "active" | "matured" | "closed"
+  interestEarned: number
+  totalAmount: number
+}
+
+// Subscription Model
+export interface Subscription {
+  id: string
+  name: string
+  vendor: string
+  amount: number
+  frequency: "weekly" | "monthly" | "yearly"
+  nextBillingDate: Date
+  startDate: Date
+  status: "active" | "paused" | "cancelled"
+  category: string
+  autoRenew: boolean
+}
+
+// Loan Models
+export interface Loan {
+  id: string
+  amount: number
+  interestRate: number
+  tenure: number
+  monthlyEMI: number
+  startDate: Date
+  endDate: Date
+  status: "approved" | "pending" | "rejected" | "active" | "completed"
+  paidAmount: number
+  remainingAmount: number
+}
+
+// Budget & Expense Models
+export interface ExpenseCategory {
+  id: string
+  name: string
+  icon: string
+  color: string
+  budget: number
+  spent: number
+  percentage: number
+}
+
+export interface BudgetGoal {
+  id: string
+  category: string
+  monthlyBudget: number
+  currentMonth: number
+  alerts: boolean
+}
+
+// Referral & Loyalty Models
+export interface ReferredUser {
+  id: string
+  name: string
+  phone: string
+  status: "pending" | "verified"
+  earnedReward: number
+  joinDate: Date
+}
+
+export interface Referral {
+  id: string
+  referralCode: string
+  referredCount: number
+  earnedAmount: number
+  referredUsers: ReferredUser[]
+  status: "active" | "inactive"
+  createdDate: Date
+}
+
+export interface LoyaltyTier {
+  tier: "bronze" | "silver" | "gold" | "platinum"
+  points: number
+  multiplier: number
+  benefits: string[]
 }
 
 export default function GPay() {
@@ -240,6 +368,168 @@ export default function GPay() {
       date: new Date(Date.now() - 1000 * 60 * 60 * 72),
     },
   ])
+
+  // Crypto Wallet State
+  const [cryptoWallets, setCryptoWallets] = useState<CryptoWallet[]>([
+    {
+      id: "1",
+      symbol: "BTC",
+      name: "Bitcoin",
+      quantity: 0.0234,
+      currentPrice: 43250,
+      balance: 1012.445,
+      change24h: 2.5,
+      icon: "₿",
+    },
+    {
+      id: "2",
+      symbol: "ETH",
+      name: "Ethereum",
+      quantity: 0.5,
+      currentPrice: 2250,
+      balance: 1125,
+      change24h: -1.2,
+      icon: "Ξ",
+    },
+  ])
+
+  const [cryptoTransactions, setCryptoTransactions] = useState<CryptoTransaction[]>([])
+
+  // Fixed Deposits State
+  const [fixedDeposits, setFixedDeposits] = useState<FixedDeposit[]>([
+    {
+      id: "1",
+      amount: 50000,
+      depositDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
+      maturityDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 335),
+      interestRate: 6.5,
+      tenure: 12,
+      status: "active",
+      interestEarned: 3250,
+      totalAmount: 53250,
+    },
+  ])
+
+  // Subscriptions State
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([
+    {
+      id: "1",
+      name: "Netflix",
+      vendor: "Netflix Inc.",
+      amount: 199,
+      frequency: "monthly",
+      nextBillingDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
+      startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
+      status: "active",
+      category: "Entertainment",
+      autoRenew: true,
+    },
+    {
+      id: "2",
+      name: "Spotify Premium",
+      vendor: "Spotify AB",
+      amount: 119,
+      frequency: "monthly",
+      nextBillingDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 12),
+      startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60),
+      status: "active",
+      category: "Music",
+      autoRenew: true,
+    },
+  ])
+
+  // Loans State
+  const [loans, setLoans] = useState<Loan[]>([
+    {
+      id: "1",
+      amount: 200000,
+      interestRate: 9.5,
+      tenure: 60,
+      monthlyEMI: 4167,
+      startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60),
+      endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1740),
+      status: "active",
+      paidAmount: 25002,
+      remainingAmount: 174998,
+    },
+  ])
+
+  // Budget & Expense State
+  const [expenseCategories, setExpenseCategories] = useState<ExpenseCategory[]>([
+    {
+      id: "1",
+      name: "Food & Dining",
+      icon: "🍔",
+      color: "#FF6B6B",
+      budget: 8000,
+      spent: 5240,
+      percentage: 65.5,
+    },
+    {
+      id: "2",
+      name: "Transportation",
+      icon: "🚗",
+      color: "#4ECDC4",
+      budget: 5000,
+      spent: 3150,
+      percentage: 63,
+    },
+    {
+      id: "3",
+      name: "Entertainment",
+      icon: "🎬",
+      color: "#95E1D3",
+      budget: 3000,
+      spent: 2100,
+      percentage: 70,
+    },
+    {
+      id: "4",
+      name: "Shopping",
+      icon: "🛍️",
+      color: "#F8B500",
+      budget: 10000,
+      spent: 8750,
+      percentage: 87.5,
+    },
+  ])
+
+  const [budgetGoals, setBudgetGoals] = useState<BudgetGoal[]>([])
+
+  // Referral & Loyalty State
+  const [referral, setReferral] = useState<Referral>({
+    id: "1",
+    referralCode: "GPAY123456",
+    referredCount: 5,
+    earnedAmount: 2500,
+    referredUsers: [
+      {
+        id: "1",
+        name: "Arjun Singh",
+        phone: "+91 9876543210",
+        status: "verified",
+        earnedReward: 500,
+        joinDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 90),
+      },
+      {
+        id: "2",
+        name: "Priya Patel",
+        phone: "+91 8765432109",
+        status: "verified",
+        earnedReward: 500,
+        joinDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 60),
+      },
+    ],
+    status: "active",
+    createdDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 180),
+  })
+
+  const [loyaltyTier, setLoyaltyTier] = useState<LoyaltyTier>({
+    tier: "gold",
+    points: 4500,
+    multiplier: 1.5,
+    benefits: ["Free transfers", "Priority support", "Higher cashback"],
+  })
 
   useEffect(() => {
     const savedUser = localStorage.getItem("gpay_user")
@@ -458,6 +748,231 @@ export default function GPay() {
     ])
   }
 
+  // Crypto Handlers
+  const handleBuyCrypto = (walletId: string, quantity: number, pricePerUnit: number) => {
+    const totalAmount = quantity * pricePerUnit
+    if (totalAmount <= balance) {
+      setBalance((prev) => prev - totalAmount)
+      setCryptoWallets((prev) =>
+        prev.map((w) =>
+          w.id === walletId
+            ? { ...w, quantity: w.quantity + quantity, balance: (w.quantity + quantity) * w.currentPrice }
+            : w,
+        ),
+      )
+      setCryptoTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          walletId,
+          type: "buy",
+          quantity,
+          pricePerUnit,
+          totalAmount,
+          date: new Date(),
+          status: "completed",
+        },
+        ...prev,
+      ])
+      setTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "sent",
+          amount: totalAmount,
+          description: `Bought ${quantity} units of crypto`,
+          date: new Date(),
+        },
+        ...prev,
+      ])
+    }
+  }
+
+  const handleSellCrypto = (walletId: string, quantity: number, pricePerUnit: number) => {
+    const wallet = cryptoWallets.find((w) => w.id === walletId)
+    if (wallet && wallet.quantity >= quantity) {
+      const totalAmount = quantity * pricePerUnit
+      setBalance((prev) => prev + totalAmount)
+      setCryptoWallets((prev) =>
+        prev.map((w) =>
+          w.id === walletId
+            ? { ...w, quantity: w.quantity - quantity, balance: (w.quantity - quantity) * w.currentPrice }
+            : w,
+        ),
+      )
+      setCryptoTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          walletId,
+          type: "sell",
+          quantity,
+          pricePerUnit,
+          totalAmount,
+          date: new Date(),
+          status: "completed",
+        },
+        ...prev,
+      ])
+      setTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "received",
+          amount: totalAmount,
+          description: `Sold ${quantity} units of crypto`,
+          date: new Date(),
+        },
+        ...prev,
+      ])
+    }
+  }
+
+  // Fixed Deposit Handlers
+  const handleCreateFixedDeposit = (amount: number, tenure: number, interestRate: number) => {
+    if (amount <= balance) {
+      setBalance((prev) => prev - amount)
+      const maturityDate = new Date()
+      maturityDate.setMonth(maturityDate.getMonth() + tenure)
+      const interestEarned = (amount * interestRate * tenure) / (12 * 100)
+
+      setFixedDeposits((prev) => [
+        {
+          id: Date.now().toString(),
+          amount,
+          depositDate: new Date(),
+          maturityDate,
+          interestRate,
+          tenure,
+          status: "active",
+          interestEarned,
+          totalAmount: amount + interestEarned,
+        },
+        ...prev,
+      ])
+      setTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "sent",
+          amount,
+          description: `Fixed Deposit Created for ${tenure} months`,
+          date: new Date(),
+        },
+        ...prev,
+      ])
+    }
+  }
+
+  // Subscription Handlers
+  const handleAddSubscription = (subscription: Subscription) => {
+    setSubscriptions((prev) => [{ ...subscription, id: Date.now().toString() }, ...prev])
+  }
+
+  const handleCancelSubscription = (subscriptionId: string) => {
+    setSubscriptions((prev) =>
+      prev.map((s) => (s.id === subscriptionId ? { ...s, status: "cancelled" } : s)),
+    )
+  }
+
+  const handlePauseSubscription = (subscriptionId: string) => {
+    setSubscriptions((prev) =>
+      prev.map((s) => (s.id === subscriptionId ? { ...s, status: "paused" } : s)),
+    )
+  }
+
+  // Loan Handlers
+  const handleApplyLoan = (amount: number, tenure: number, interestRate: number) => {
+    const monthlyEMI = (amount * (interestRate / 12 / 100) * (1 + interestRate / 12 / 100) ** tenure) / ((1 + interestRate / 12 / 100) ** tenure - 1)
+
+    setLoans((prev) => [
+      {
+        id: Date.now().toString(),
+        amount,
+        interestRate,
+        tenure,
+        monthlyEMI: Math.round(monthlyEMI),
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30 * tenure),
+        status: "pending",
+        paidAmount: 0,
+        remainingAmount: amount,
+      },
+      ...prev,
+    ])
+  }
+
+  const handlePayLoanEMI = (loanId: string) => {
+    const loan = loans.find((l) => l.id === loanId)
+    if (loan && balance >= loan.monthlyEMI) {
+      setBalance((prev) => prev - loan.monthlyEMI)
+      setLoans((prev) =>
+        prev.map((l) =>
+          l.id === loanId
+            ? {
+                ...l,
+                paidAmount: l.paidAmount + l.monthlyEMI,
+                remainingAmount: Math.max(0, l.remainingAmount - l.monthlyEMI),
+                status: l.remainingAmount - l.monthlyEMI <= 0 ? "completed" : "active",
+              }
+            : l,
+        ),
+      )
+      setTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "sent",
+          amount: loan.monthlyEMI,
+          description: `Loan EMI Payment - ${loan.monthlyEMI}`,
+          date: new Date(),
+        },
+        ...prev,
+      ])
+    }
+  }
+
+  // Budget & Expense Handlers
+  const handleUpdateCategorySpent = (categoryId: string, amount: number) => {
+    setExpenseCategories((prev) =>
+      prev.map((cat) => {
+        if (cat.id === categoryId) {
+          const spent = cat.spent + amount
+          return {
+            ...cat,
+            spent,
+            percentage: (spent / cat.budget) * 100,
+          }
+        }
+        return cat
+      }),
+    )
+  }
+
+  const handleCreateBudgetGoal = (goal: BudgetGoal) => {
+    setBudgetGoals((prev) => [{ ...goal, id: Date.now().toString() }, ...prev])
+  }
+
+  // Referral & Loyalty Handlers
+  const handleAddReferredUser = (user: ReferredUser) => {
+    setReferral((prev) => ({
+      ...prev,
+      referredCount: prev.referredCount + 1,
+      referredUsers: [...prev.referredUsers, user],
+    }))
+  }
+
+  const handleClaimReferralReward = () => {
+    if (referral.earnedAmount > 0) {
+      setBalance((prev) => prev + referral.earnedAmount)
+      setReferral((prev) => ({ ...prev, earnedAmount: 0 }))
+      setTransactions((prev) => [
+        {
+          id: Date.now().toString(),
+          type: "received",
+          amount: referral.earnedAmount,
+          description: "Referral Reward Claimed",
+          date: new Date(),
+        },
+        ...prev,
+      ])
+    }
+  }
+
   const unreadNotifications = notifications.filter((n) => !n.isRead).length
 
   const fullScreenModes: Screen[] = [
@@ -477,6 +992,15 @@ export default function GPay() {
     "chat-support",
     "autopay",
     "transaction-limits",
+    "crypto-wallet",
+    "crypto-transaction",
+    "savings",
+    "subscriptions",
+    "loan-calculator",
+    "loan-application",
+    "budget",
+    "referral",
+    "loyalty-dashboard",
   ]
 
   if (!isLoggedIn) {
@@ -540,6 +1064,12 @@ export default function GPay() {
                 onLendingClick={() => setCurrentScreen("lending")}
                 onAnalyticsClick={() => setCurrentScreen("analytics")}
                 onSecurityClick={() => setCurrentScreen("security")}
+                onCryptoClick={() => setCurrentScreen("crypto-wallet")}
+                onSavingsClick={() => setCurrentScreen("savings")}
+                onSubscriptionsClick={() => setCurrentScreen("subscriptions")}
+                onBudgetClick={() => setCurrentScreen("budget")}
+                onReferralClick={() => setCurrentScreen("referral")}
+                onLoyaltyClick={() => setCurrentScreen("loyalty-dashboard")}
               />
             )}
             {currentScreen === "profile" && (
@@ -653,6 +1183,73 @@ export default function GPay() {
             )}
             {currentScreen === "security" && (
               <SecurityScreen onBack={() => setCurrentScreen("home")} />
+            )}
+            {currentScreen === "crypto-wallet" && (
+              <CryptoWalletScreen
+                wallets={cryptoWallets}
+                onBack={() => setCurrentScreen("home")}
+                onBuySell={() => setCurrentScreen("crypto-transaction")}
+              />
+            )}
+            {currentScreen === "crypto-transaction" && (
+              <CryptoTransactionScreen
+                wallets={cryptoWallets}
+                onBack={() => setCurrentScreen("crypto-wallet")}
+                onBuyCrypto={handleBuyCrypto}
+                onSellCrypto={handleSellCrypto}
+                balance={balance}
+              />
+            )}
+            {currentScreen === "savings" && (
+              <SavingsScreen
+                fixedDeposits={fixedDeposits}
+                onBack={() => setCurrentScreen("home")}
+                onCreateFD={handleCreateFixedDeposit}
+                balance={balance}
+              />
+            )}
+            {currentScreen === "subscriptions" && (
+              <SubscriptionsScreen
+                subscriptions={subscriptions}
+                onBack={() => setCurrentScreen("home")}
+                onAddSubscription={handleAddSubscription}
+                onCancelSubscription={handleCancelSubscription}
+                onPauseSubscription={handlePauseSubscription}
+              />
+            )}
+            {currentScreen === "loan-calculator" && (
+              <LoanCalculatorScreen onBack={() => setCurrentScreen("home")} />
+            )}
+            {currentScreen === "loan-application" && (
+              <LoanApplicationScreen
+                onBack={() => setCurrentScreen("home")}
+                onApplyLoan={handleApplyLoan}
+                loans={loans}
+              />
+            )}
+            {currentScreen === "budget" && (
+              <BudgetScreen
+                categories={expenseCategories}
+                budgetGoals={budgetGoals}
+                onBack={() => setCurrentScreen("home")}
+                onUpdateCategory={handleUpdateCategorySpent}
+                onCreateBudgetGoal={handleCreateBudgetGoal}
+              />
+            )}
+            {currentScreen === "referral" && (
+              <ReferralScreen
+                referral={referral}
+                onBack={() => setCurrentScreen("home")}
+                onAddReferredUser={handleAddReferredUser}
+                onClaimReward={handleClaimReferralReward}
+              />
+            )}
+            {currentScreen === "loyalty-dashboard" && (
+              <LoyaltyDashboardScreen
+                loyaltyTier={loyaltyTier}
+                referral={referral}
+                onBack={() => setCurrentScreen("home")}
+              />
             )}
           </div>
         </div>

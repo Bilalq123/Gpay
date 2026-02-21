@@ -26,6 +26,12 @@ import {
   ArrowDownToLine,
   TrendingUp,
   BarChart,
+  Zap,
+  Gem,
+  RefreshCw,
+  PieChart,
+  Share2,
+  Star,
 } from "lucide-react"
 import type { Contact } from "@/app/page"
 
@@ -76,6 +82,12 @@ interface HomeScreenProps {
   onLendingClick?: () => void
   onAnalyticsClick?: () => void
   onSecurityClick?: () => void
+  onCryptoClick?: () => void
+  onSavingsClick?: () => void
+  onSubscriptionsClick?: () => void
+  onBudgetClick?: () => void
+  onReferralClick?: () => void
+  onLoyaltyClick?: () => void
 }
 
 export function HomeScreen({
@@ -106,6 +118,12 @@ export function HomeScreen({
   onLendingClick = () => {},
   onAnalyticsClick = () => {},
   onSecurityClick = () => {},
+  onCryptoClick = () => {},
+  onSavingsClick = () => {},
+  onSubscriptionsClick = () => {},
+  onBudgetClick = () => {},
+  onReferralClick = () => {},
+  onLoyaltyClick = () => {},
 }: HomeScreenProps) {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showWithdrawModal, setShowWithdrawModal] = useState(false)
@@ -154,6 +172,12 @@ export function HomeScreen({
     { icon: Shield, label: "Insurance", onClick: onInsuranceClick, color: "bg-red-600" },
     { icon: CreditCard, label: "Loans", onClick: onLendingClick, color: "bg-blue-600" },
     { icon: BarChart, label: "Insights", onClick: onAnalyticsClick, color: "bg-purple-600" },
+    { icon: Gem, label: "Crypto", onClick: onCryptoClick, color: "bg-orange-600" },
+    { icon: TrendingUp, label: "Savings", onClick: onSavingsClick, color: "bg-cyan-600" },
+    { icon: RefreshCw, label: "Subscriptions", onClick: onSubscriptionsClick, color: "bg-indigo-600" },
+    { icon: PieChart, label: "Budget", onClick: onBudgetClick, color: "bg-emerald-600" },
+    { icon: Share2, label: "Referral", onClick: onReferralClick, color: "bg-pink-600" },
+    { icon: Star, label: "Loyalty", onClick: onLoyaltyClick, color: "bg-yellow-600" },
   ]
 
   return (
